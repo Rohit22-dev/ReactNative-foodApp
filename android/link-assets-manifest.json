@@ -1,0 +1,13 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/Combo-Regular.ttf",
+      "sha1": "a871aa93c384efacede8eebd1c6b5d9fa2228d6b"
+    },
+    {
+      "path": "assets/fonts/SquadaOne-Regular.ttf",
+      "sha1": "6033f8c50be329002978b6307b5fa7f177830540"
+    }
+  ]
+}
