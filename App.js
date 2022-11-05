@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, ScrollView} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
 import Home from './components/Home';
 import Cart from './components/Cart/index';
 import {NavigationContainer} from '@react-navigation/native';
@@ -9,9 +9,12 @@ import SignUpScreen from './screens/SignUpScreen';
 import ConfirmEmailScreen from './screens/ConfirmEmailScreeen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import NewPasswordScreen from './screens/NewPasswordScreen';
-import Navigation from './Navigation/Index.js'
+import UserProvider from './provider/userProvider';
+import {Amplify} from 'aws-amplify';
+import aws_exports from './aws-exports';
+import {withAuthenticator} from 'aws-amplify-react-native';
 
-
+Amplify.configure(aws_exports);
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -31,16 +34,24 @@ const App = () => {
           <Text style={styles.loadText}>FAVfood</Text>
         </View>
       ) : (
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="home">
-            <Stack.Screen
-              name="home"
-              component={Navigation}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen name="cart" component={Cart} />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <UserProvider>
+          <NavigationContainer>
+            <Stack.Navigator
+              initialRouteName="home"
+              screenOptions={{headerShown: false}}>
+              <Stack.Screen name="Home" component={Home} />
+              <Stack.Screen name="SignIn" component={SignInScreen} />
+              <Stack.Screen name="SignUp" component={SignUpScreen} />
+              <Stack.Screen
+                name="ConfirmEmail"
+                component={ConfirmEmailScreen}
+              />
+              <Stack.Screen name="ForgotPwd" component={ForgotPasswordScreen} />
+              <Stack.Screen name="NewPwd" component={NewPasswordScreen} />
+              <Stack.Screen name="cart" component={Cart} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </UserProvider>
       )}
     </>
   );
@@ -60,4 +71,43 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+const signUpConfig = {
+  header: 'My Customised Sign Up',
+  hideAllDefaults: true,
+  signUpFields: [
+    {
+      label: 'Full name',
+      key: 'name',
+      placeholder: 'Full name',
+      required: true,
+      displayOrder: 1,
+      type: 'string',
+    },
+    {
+      label: 'Email',
+      placeholder: 'Email',
+      key: 'email',
+      required: true,
+      displayOrder: 2,
+      type: 'string',
+    },
+    {
+      label: 'Username',
+      placeholder: 'Username',
+      key: 'username',
+      required: true,
+      displayOrder: 3,
+      type: 'string',
+    },
+    {
+      label: 'Password',
+      placeholder: 'Password',
+      key: 'password',
+      required: true,
+      displayOrder: 4,
+      type: 'password',
+    },
+  ],
+};
+
+export default withAuthenticator(App, {signUpConfig});

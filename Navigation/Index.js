@@ -1,12 +1,18 @@
-import { View, Text } from 'react-native'
+import { View, Text,StyleSheet } from 'react-native'
 import React from 'react'
 
-const Index = () => {
+const Navigation = () => {
   return (
     <View>
-      <Text>Navigation</Text>
+      <Text style={styles.text}>Navigation</Text>
     </View>
   )
 }
 
-export default Index
+const styles = StyleSheet.create({
+    text:{
+        color: 'black',
+    }
+  });
+
+export default Navigation

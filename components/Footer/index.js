@@ -6,8 +6,15 @@ import Icon1 from 'react-native-vector-icons/Feather';
 import Icon2 from 'react-native-vector-icons/Feather';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon4 from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useNavigation} from '@react-navigation/native';
 
 const Footer = () => {
+  const navigation = useNavigation();
+
+  const onAccountPressed = () => {
+    navigation.navigate('SignIn');
+  };
+
   return (
     <View style={styles.container}>
       <Icon style={styles.fOptions} name="home" size={25} color="#fff" />
@@ -23,6 +30,7 @@ const Footer = () => {
         name="account-settings-outline"
         size={25}
         color="#fff"
+        onPress={onAccountPressed}
       />
       <Icon4
         style={styles.fOptions}

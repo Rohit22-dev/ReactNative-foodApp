@@ -1,16 +1,27 @@
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, View, Text} from 'react-native';
 import React from 'react';
 import Main from './Main';
 import FoodList from './FoodList';
 import Footer from './Footer';
+import foods from './FoodList/foods';
+import FoodItems from './FoodItems';
 
 const Home = props => {
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scroll}>
-        <Main navigation={props.navigation} />
-        <FoodList />
-      </ScrollView>
+      <FlatList
+        data={[
+          <Main navigation={props.navigation} />,
+          <Text style={styles.fHead}>Choose a Delight</Text>,
+          ...foods,
+        ]}
+        renderItem={({item, index}) =>
+          index <= 1 ? item : <FoodItems food={item} />
+        }
+        showsVerticalScrollIndicator={false}
+        scrollEnabled={true}
+        style={styles.scroll}
+      />
       <Footer />
     </View>
   );
@@ -25,6 +36,13 @@ const styles = StyleSheet.create({
   },
   scroll: {
     width: '100%',
+  },
+  fHead: {
+    color: '#1AC073',
+    fontSize: 25,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginVertical: 20,
   },
 });
 

@@ -4,7 +4,7 @@ import styles from './styles';
 import foods from './foods';
 import FoodItems from '../FoodItems';
 
-const FoodList = () => {
+const FoodList = props => {
   return (
     <View style={styles.container}>
       <Text style={styles.fHead}>Choose a Delight</Text>
@@ -12,6 +12,7 @@ const FoodList = () => {
         data={foods}
         renderItem={({item}) => <FoodItems food={item} />}
         showsVerticalScrollIndicator={false}
+        scrollEnabled={true}
         // snapToAlignment={'start'}
         // decelerationRate={'fast'}
         // snapToInterval={Dimensions.get('window').height}

@@ -5,21 +5,33 @@ import {
   useWindowDimensions,
   ScrollView,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import Logo from '../assets/images/fav2.png';
 import CustomInput from './CustomInput';
 import CustomButton from './CustomButton';
+import {useNavigation} from '@react-navigation/native';
+import {useForm} from 'react-hook-form';
+import userContext from '../context/userContext';
 
 const SignInScreen = () => {
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
-  const {height} = useWindowDimensions();
+  const {user, setUser} = useContext(userContext);
 
-  const onSignInPressed = () => {
-    console.warn('Sign In');
+  const {height} = useWindowDimensions();
+  const navigation = useNavigation();
+
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm();
+  console.log(errors);
+
+  const onSignInPressed = data => {
+    navigation.navigate('Home');
+    setUser(data);
   };
   const onForgotPwdPressed = () => {
-    console.warn('Forgot Password');
+    navigation.navigate('ForgotPwd');
   };
   const onSignInGoogle = () => {
     console.warn('Sign In with Google');
@@ -28,7 +40,7 @@ const SignInScreen = () => {
     console.warn('Sign In with Facebook');
   };
   const onSignUpPressed = () => {
-    console.warn('On sign up pressed');
+    navigation.navigate('SignUp');
   };
 
   return (
@@ -41,17 +53,26 @@ const SignInScreen = () => {
         />
 
         <CustomInput
+          name="username"
           placeholder="Username"
-          value={userName}
-          setValue={setUserName}
+          control={control}
+          rules={{required: 'Username is required'}}
         />
         <CustomInput
+          name="password"
           placeholder="Password"
-          value={password}
-          setValue={setPassword}
+          control={control}
+          rules={{
+            required: 'Password is required',
+            minLength: {
+              value: '4',
+              message: 'Password should be minimum 4 characters long',
+            },
+          }}
           secureTextEntry
         />
-        <CustomButton text="Sign In" onPress={onSignInPressed} />
+        <CustomButton text="Sign In" onPress={handleSubmit(onSignInPressed)} />
+
         <CustomButton
           text="Forgot Password"
           onPress={onForgotPwdPressed}

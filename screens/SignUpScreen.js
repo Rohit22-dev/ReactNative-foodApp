@@ -1,25 +1,24 @@
-import {
-  View,
-  StyleSheet,
-  Text,
-  ScrollView,
-} from 'react-native';
+import {View, StyleSheet, Text, ScrollView} from 'react-native';
 import React, {useState} from 'react';
 import CustomInput from './CustomInput';
 import CustomButton from './CustomButton';
 import SocialSignInButtons from './SocialSignInButtons';
+import {useNavigation} from '@react-navigation/native';
+import {useForm} from 'react-hook-form';
+
+const EMAIL_REGEX =
+  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 const SignUpScreen = () => {
-  const [userName, setUserName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordRepeat, setPasswordRepeat] = useState('');
+  const {control, handleSubmit, watch} = useForm();
+  const pwd = watch('password');
+  const navigation = useNavigation();
 
   const onRegisterPressed = () => {
-    console.warn('Register Pressed');
+    navigation.navigate('ConfirmEmail');
   };
   const onSignInPressed = () => {
-    console.warn('Sign in pressed');
+    navigation.navigate('SignIn');
   };
   const onTermsOfUsePressed = () => {
     console.warn('On terms of use pressed');
@@ -34,34 +33,68 @@ const SignUpScreen = () => {
         <Text style={styles.title}>Create an account</Text>
 
         <CustomInput
+          name="username"
           placeholder="Username"
-          value={userName}
-          setValue={setUserName}
+          control={control}
+          rules={{
+            required: 'Username is required',
+            minLength: {
+              value: '3',
+              message: 'Username should be at least 3 characters long',
+            },
+            maxLength: {
+              value: '24',
+              message: 'Username should be at most 24 characters long',
+            },
+          }}
         />
-        <CustomInput placeholder="Email" value={email} setValue={setEmail} />
         <CustomInput
+          name="email"
+          placeholder="Email"
+          control={control}
+          rules={{
+            required: 'Email is required',
+            pattern: {value: EMAIL_REGEX, message: 'Email is invalid'},
+          }}
+        />
+        <CustomInput
+          name="password"
           placeholder="Password"
-          value={password}
-          setValue={setPassword}
+          control={control}
+          rules={{
+            required: 'Password is required',
+            minLength: {
+              value: '4',
+              message: 'Password should be at least 3 characters long',
+            },
+          }}
           secureTextEntry
         />
         <CustomInput
+          name="repeat-password"
           placeholder="Repeat Password"
-          value={passwordRepeat}
-          setValue={setPasswordRepeat}
+          control={control}
+          rules={{validate: value => value === pwd || 'Password do not match'}}
           secureTextEntry
         />
-        <CustomButton text="Register" onPress={onRegisterPressed} />
+        <CustomButton
+          text="Register"
+          onPress={handleSubmit(onRegisterPressed)}
+        />
 
         <Text style={styles.text}>
           By registering, you confirm that you accept our{' '}
-          <Text style={styles.link} onPress={onTermsOfUsePressed}>Terms of Use</Text> and{' '} 
-          <Text style={styles.link} onPress={onPrivacyPressed}>Privacy Policy.</Text>
+          <Text style={styles.link} onPress={onTermsOfUsePressed}>
+            Terms of Use
+          </Text>{' '}
+          and{' '}
+          <Text style={styles.link} onPress={onPrivacyPressed}>
+            Privacy Policy.
+          </Text>
         </Text>
 
-        <SocialSignInButtons/>
+        <SocialSignInButtons />
 
-      
         <CustomButton
           text="Have an account? Sign in"
           onPress={onSignInPressed}
@@ -86,11 +119,11 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'grey',
-    marginVertical: 10, 
+    marginVertical: 10,
   },
   link: {
-    color: '#fdb075'
-  }
+    color: '#fdb075',
+  },
 });
 
 export default SignUpScreen;

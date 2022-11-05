@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-favapp-staging-143350-authRole",
+      "UnauthRoleArn": "arn:aws:iam::141507677850:role/amplify-favapp-staging-143350-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::141507677850:role/amplify-favapp-staging-143350-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-favapp-staging-143350-deployment",
+      "UnauthRoleName": "amplify-favapp-staging-143350-unauthRole",
+      "StackName": "amplify-favapp-staging-143350",
+      "StackId": "arn:aws:cloudformation:us-east-1:141507677850:stack/amplify-favapp-staging-143350/5e228c20-5abb-11ed-a732-0a4bd5e481e7",
+      "AmplifyAppId": "d2bvk0um8v12d9"
+    },
+    "categories": {
+      "auth": {
+        "FavApp": {}
+      }
+    }
+  }
+}
