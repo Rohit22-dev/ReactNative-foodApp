@@ -11,10 +11,11 @@ import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import NewPasswordScreen from './screens/NewPasswordScreen';
 import UserProvider from './provider/userProvider';
 import {Amplify} from 'aws-amplify';
-import aws_exports from './aws-exports';
-import {withAuthenticator} from 'aws-amplify-react-native';
+import awsExports from './src/aws-exports';
 
-Amplify.configure(aws_exports);
+Amplify.configure({
+  ...awsExports
+});
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -71,43 +72,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const signUpConfig = {
-  header: 'My Customised Sign Up',
-  hideAllDefaults: true,
-  signUpFields: [
-    {
-      label: 'Full name',
-      key: 'name',
-      placeholder: 'Full name',
-      required: true,
-      displayOrder: 1,
-      type: 'string',
-    },
-    {
-      label: 'Email',
-      placeholder: 'Email',
-      key: 'email',
-      required: true,
-      displayOrder: 2,
-      type: 'string',
-    },
-    {
-      label: 'Username',
-      placeholder: 'Username',
-      key: 'username',
-      required: true,
-      displayOrder: 3,
-      type: 'string',
-    },
-    {
-      label: 'Password',
-      placeholder: 'Password',
-      key: 'password',
-      required: true,
-      displayOrder: 4,
-      type: 'password',
-    },
-  ],
-};
-
-export default withAuthenticator(App, {signUpConfig});
+export default App;

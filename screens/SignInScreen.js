@@ -4,17 +4,21 @@ import {
   StyleSheet,
   useWindowDimensions,
   ScrollView,
+  Alert,
 } from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Logo from '../assets/images/fav2.png';
 import CustomInput from './CustomInput';
 import CustomButton from './CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
-import userContext from '../context/userContext';
+import {Auth} from 'aws-amplify';
+import axios from 'axios';
+import md5 from 'md5';
 
 const SignInScreen = () => {
-  const {user, setUser} = useContext(userContext);
+  // const {user, setUser} = useContext('');
+  const [load, setLoad] = useState(false);
 
   const {height} = useWindowDimensions();
   const navigation = useNavigation();
@@ -24,11 +28,29 @@ const SignInScreen = () => {
     handleSubmit,
     formState: {errors},
   } = useForm();
-  console.log(errors);
 
-  const onSignInPressed = data => {
+  // useEffect(() => {
+  //   Auth.signIn('qwerty', 'Qwer123@').then(res =>
+  //     console.log(res),
+  //   );
+  // }, []);
+
+  const onSignInPressed = async data => {
+    if (load) {
+      return;
+    }
+    setLoad(true);
+    try {
+      const response = await Auth.signIn(data.username, data.password);
+      console.log(response);
+    } catch (e) {
+      console.log(e);
+      Alert.alert('Oops', e.message);
+    }
+    setLoad(false);
+
     navigation.navigate('Home');
-    setUser(data);
+    // setUser(data);
   };
   const onForgotPwdPressed = () => {
     navigation.navigate('ForgotPwd');
@@ -71,7 +93,10 @@ const SignInScreen = () => {
           }}
           secureTextEntry
         />
-        <CustomButton text="Sign In" onPress={handleSubmit(onSignInPressed)} />
+        <CustomButton
+          text={load ? 'Loading...' : 'Sign In'}
+          onPress={handleSubmit(onSignInPressed)}
+        />
 
         <CustomButton
           text="Forgot Password"

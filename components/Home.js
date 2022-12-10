@@ -1,12 +1,14 @@
 import {FlatList, StyleSheet, View, Text} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import Main from './Main';
-import FoodList from './FoodList';
 import Footer from './Footer';
 import foods from './FoodList/foods';
 import FoodItems from './FoodItems';
 
 const Home = props => {
+
+  
+ 
   return (
     <View style={styles.container}>
       <FlatList

@@ -1,0 +1,21 @@
+{
+    "appName": "favapp",
+    "roleName": "pinpointLambdaRole759837e2",
+    "cloudformationPolicyName": "cloudformationPolicy759837e2",
+    "cloudWatchPolicyName": "cloudWatchPolicy759837e2",
+    "pinpointPolicyName": "pinpointPolicy759837e2",
+    "authPolicyName": "pinpoint_amplify_759837e2",
+    "unauthPolicyName": "pinpoint_amplify_759837e2",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    }
+}

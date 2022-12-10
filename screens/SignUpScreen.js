@@ -1,21 +1,42 @@
-import {View, StyleSheet, Text, ScrollView} from 'react-native';
+import {View, StyleSheet, Text, ScrollView, Alert} from 'react-native';
 import React, {useState} from 'react';
 import CustomInput from './CustomInput';
 import CustomButton from './CustomButton';
 import SocialSignInButtons from './SocialSignInButtons';
 import {useNavigation} from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
+import {Auth} from 'aws-amplify';
 
 const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 const SignUpScreen = () => {
   const {control, handleSubmit, watch} = useForm();
+  const [registering, setRegistering] = useState(false);
   const pwd = watch('password');
   const navigation = useNavigation();
 
-  const onRegisterPressed = () => {
-    navigation.navigate('ConfirmEmail');
+  const onRegisterPressed = async data => {
+    const {username, password, email, name} = data;
+    console.log(data);
+    if (registering) {
+      return;
+    }
+    console.log('registering...');
+    setRegistering(true);
+    try {
+      const response = await Auth.signUp({
+        username,
+        password,
+        attributes: {email, name},
+      });
+      console.log(response);
+    } catch (e) {
+      Alert.alert('Oops', e.message);
+      console.log(e)
+    }
+    setRegistering(false);
+    // navigation.navigate('ConfirmEmail');
   };
   const onSignInPressed = () => {
     navigation.navigate('SignIn');
@@ -31,6 +52,23 @@ const SignUpScreen = () => {
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.root}>
         <Text style={styles.title}>Create an account</Text>
+
+        <CustomInput
+          name="Name"
+          placeholder="Name"
+          control={control}
+          rules={{
+            required: 'Name is required',
+            minLength: {
+              value: '3',
+              message: 'Username should be at least 3 characters long',
+            },
+            maxLength: {
+              value: '24',
+              message: 'Username should be at most 24 characters long',
+            },
+          }}
+        />
 
         <CustomInput
           name="username"
@@ -78,7 +116,7 @@ const SignUpScreen = () => {
           secureTextEntry
         />
         <CustomButton
-          text="Register"
+          text={registering ? 'Registering...' : 'Register'}
           onPress={handleSubmit(onRegisterPressed)}
         />
 
